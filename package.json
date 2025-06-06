@@ -5,15 +5,19 @@
   "description": "Twitch app for TizenBrew with support for emotes.",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "esbuild ./src/index.ts --bundle --minify --outfile=./dist/index.js",
+    "build": "rollup -c ./rollup.config.js",
     "start": "node --experimental-strip-types ./src/index.ts"
   },
   "dependencies": {
     "emotettv": "^1.0.2"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@tsconfig/strictest": "^2.0.5",
-    "esbuild": "0.25.5",
+    "rollup": "^4.42.0",
+    "tslib": "^2.8.1",
     "typescript": "^5.8.3"
   },
   "appName": "TizenTTV",
