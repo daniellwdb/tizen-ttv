@@ -3,38 +3,28 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
-let pathname: string;
-
-function wait(timeout: number) {
-  return new Promise((resolve) => setTimeout(resolve, timeout));
-}
-
-async function init() {
-  pathname = new URL(document.URL).pathname.replace("/", "");
-
-  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
-
+async function getChannelId() {
   const useChannelSubscriptionPolling_SubscriptionQuery = `
-    query useChannelSubscriptionPolling_SubscriptionQuery(
-      $login: String
-    ) {
-      user(login: $login) {
-        ...useChannelSubscriptionPolling_subscription
+  query useChannelSubscriptionPolling_SubscriptionQuery(
+    $login: String
+  ) {
+    user(login: $login) {
+      ...useChannelSubscriptionPolling_subscription
+      id
+      __typename
+    }
+  }
+
+  fragment useChannelSubscriptionPolling_subscription on User {
+    login
+    self {
+      subscriptionBenefit {
         id
         __typename
       }
     }
-
-    fragment useChannelSubscriptionPolling_subscription on User {
-      login
-      self {
-        subscriptionBenefit {
-          id
-          __typename
-        }
-      }
-    }
-  `;
+  }
+`;
 
   const response = await fetch(TWITCH_API, {
     method: "POST",
@@ -51,6 +41,14 @@ async function init() {
   });
 
   const { data } = await response.json();
+
+  alert(`id: ${data.user.id}`);
+
+  return data.user.id;
+}
+
+async function main() {
+  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
   const observer = new MutationObserver((records) => {
     for (const record of records) {
@@ -69,7 +67,7 @@ async function init() {
             originalMessage.textContent!,
             undefined,
             {
-              channelId: data.user.id,
+              channelId: await getChannelId(),
               providers: {
                 twitch: true,
                 bttv: true,
@@ -86,15 +84,6 @@ async function init() {
   });
 
   observer.observe(chatContainer, { childList: true, subtree: true });
-}
-
-async function main() {
-  const currentPathname = new URL(document.URL).pathname.replace("/", "");
-
-  while (pathname && currentPathname !== pathname) {
-    await wait(1000);
-    init();
-  }
 }
 
 main();
