@@ -4,4 +4,4 @@ Twitch app for TizenBrew with support for emotes.
 
 ## Features
 
-- Display chat emotes from Twitch & 7TV.
+- Display chat emotes from Twitch, BTTV & 7TV.

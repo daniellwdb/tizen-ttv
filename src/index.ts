@@ -70,7 +70,7 @@ async function main() {
               channelId: data.user.id,
               providers: {
                 twitch: true,
-                bttv: false,
+                bttv: true,
                 ffz: false,
                 seventv: true,
               },
