@@ -3,7 +3,18 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
+const interval = setInterval(() => {
+  const welcomeMessageContainer =
+    document.querySelector<HTMLDivElement>(".css-175oi2r");
+
+  if (welcomeMessageContainer) {
+    main();
+  }
+}, 250);
+
 async function main() {
+  clearInterval(interval);
+
   const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
   const useChannelSubscriptionPolling_SubscriptionQuery = `
@@ -79,12 +90,3 @@ async function main() {
 
   observer.observe(chatContainer, { childList: true, subtree: true });
 }
-
-const interval = setInterval(() => {
-  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r");
-
-  if (chatContainer) {
-    main();
-    clearInterval(interval);
-  }
-}, 250);
