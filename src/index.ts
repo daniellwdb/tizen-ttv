@@ -80,4 +80,11 @@ async function main() {
   observer.observe(chatContainer, { childList: true, subtree: true });
 }
 
-main();
+const interval = setInterval(() => {
+  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r");
+
+  if (chatContainer) {
+    main();
+    clearInterval(interval);
+  }
+}, 250);
