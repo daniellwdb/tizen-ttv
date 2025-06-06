@@ -1,0 +1,18 @@
+{
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --minify --outfile=./dist/index.js",
+    "start": "node --experimental-strip-types ./src/index.ts"
+  },
+  "dependencies": {
+    "@mkody/twitch-emoticons": "^2.9.2"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "esbuild": "0.25.5",
+    "typescript": "^5.8.3"
+  },
+  "appName": "TizenTTV",
+  "packageType": "mods",
+  "websiteURL": "https://hisense.tv.twitch.tv/"
+}
