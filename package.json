@@ -13,6 +13,16 @@
     "typescript": "^5.8.3"
   },
   "appName": "TizenTTV",
+  "keys": [
+    "MediaPlayPause",
+    "MediaPlay",
+    "MediaPause",
+    "MediaStop",
+    "MediaFastForward",
+    "MediaRewind",
+    "MediaTrackNext",
+    "MediaTrackPrevious"
+  ],
   "packageType": "mods",
   "websiteURL": "https://hisense.tv.twitch.tv/"
 }
