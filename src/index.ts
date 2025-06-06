@@ -7,14 +7,15 @@ const interval = setInterval(() => {
   const welcomeMessageContainer =
     document.querySelector<HTMLDivElement>(".css-175oi2r");
 
-  if (welcomeMessageContainer) {
+  const pathname = new URL(document.URL).pathname.replace("/", "");
+
+  if (welcomeMessageContainer && pathname) {
     main();
+    clearInterval(interval);
   }
 }, 250);
 
 async function main() {
-  clearInterval(interval);
-
   const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
   const useChannelSubscriptionPolling_SubscriptionQuery = `
