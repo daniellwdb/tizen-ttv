@@ -3,18 +3,6 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
-const interval = setInterval(() => {
-  const welcomeMessageContainer =
-    document.querySelector<HTMLDivElement>(".css-175oi2r");
-
-  const pathname = new URL(document.URL).pathname.replace("/", "");
-
-  if (welcomeMessageContainer && pathname) {
-    main();
-    clearInterval(interval);
-  }
-}, 250);
-
 async function main() {
   const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
@@ -91,3 +79,5 @@ async function main() {
 
   observer.observe(chatContainer, { childList: true, subtree: true });
 }
+
+main();
