@@ -1,29 +1,77 @@
-import TwitchEmoticons from "@mkody/twitch-emoticons";
-const { EmoteFetcher, EmoteParser } = TwitchEmoticons;
+import { parseEmotes } from "emotettv";
+
+const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
+const TWITCH_API = "https://gql.twitch.tv/gql";
 
 async function main() {
-  const fetcher = new EmoteFetcher();
+  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
-  const parser = new EmoteParser(fetcher, {
-    template: '<img class="emote" alt="{name}" src="{link}">',
-    match: /(\w+)+?/g,
+  const useChannelSubscriptionPolling_SubscriptionQuery = `
+    query useChannelSubscriptionPolling_SubscriptionQuery(
+      $login: String
+    ) {
+      user(login: $login) {
+        ...useChannelSubscriptionPolling_subscription
+        id
+        __typename
+      }
+    }
+
+    fragment useChannelSubscriptionPolling_subscription on User {
+      login
+      self {
+        subscriptionBenefit {
+          id
+          __typename
+        }
+      }
+    }
+  `;
+
+  const response = await fetch(TWITCH_API, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "Client-Id": TWITCH_CLIENT_ID,
+    },
+    body: JSON.stringify({
+      query: useChannelSubscriptionPolling_SubscriptionQuery,
+      variables: {
+        login: new URL(document.URL).pathname.replace("/", ""),
+      },
+    }),
   });
 
-  // TODO: Dynamically get channel ID
-  await fetcher.fetchSevenTVEmotes(53268737, "avif");
-
-  const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
+  const { data } = await response.json();
 
   const observer = new MutationObserver((records) => {
     for (const record of records) {
-      record.addedNodes.forEach((addedNode) => {
+      record.addedNodes.forEach(async (addedNode) => {
         const firstChild = addedNode.childNodes[0];
 
-        if (firstChild) {
-          const originalMessage =
-            firstChild.childNodes[firstChild.childNodes.length - 1]!;
-          const parsedMessage = parser.parse(originalMessage.textContent!);
-          originalMessage.textContent = parsedMessage;
+        if (!firstChild) {
+          return;
+        }
+
+        const originalMessage =
+          firstChild.childNodes[firstChild.childNodes.length - 1];
+
+        if (originalMessage instanceof HTMLSpanElement) {
+          const parsedMessage = await parseEmotes(
+            originalMessage.textContent!,
+            undefined,
+            {
+              channelId: data.user.id,
+              providers: {
+                twitch: true,
+                bttv: false,
+                ffz: false,
+                seventv: true,
+              },
+            }
+          );
+
+          originalMessage.innerHTML = parsedMessage.toHTML();
         }
       });
     }
