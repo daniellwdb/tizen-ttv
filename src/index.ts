@@ -3,24 +3,15 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
-function observeUrlChange() {
-  let oldHref = document.location.href;
+let pathname: string;
 
-  const body = document.querySelector("body")!;
-
-  const observer = new MutationObserver(() => {
-    if (oldHref !== document.location.href) {
-      oldHref = document.location.href;
-      main();
-    }
-  });
-
-  observer.observe(body, { childList: true, subtree: true });
+function wait(timeout: number) {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
 }
 
-window.addEventListener("load", () => observeUrlChange());
+async function init() {
+  pathname = new URL(document.URL).pathname.replace("/", "");
 
-async function main() {
   const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
 
   const useChannelSubscriptionPolling_SubscriptionQuery = `
@@ -96,3 +87,14 @@ async function main() {
 
   observer.observe(chatContainer, { childList: true, subtree: true });
 }
+
+async function main() {
+  const currentPathname = new URL(document.URL).pathname.replace("/", "");
+
+  while (pathname && currentPathname !== pathname) {
+    await wait(1000);
+    init();
+  }
+}
+
+main();
