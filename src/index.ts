@@ -3,14 +3,25 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
-// const interval = setInterval(() => main(), 500);
+function observeUrlChange() {
+  let oldHref = document.location.href;
+
+  const body = document.querySelector("body")!;
+
+  const observer = new MutationObserver(() => {
+    if (oldHref !== document.location.href) {
+      oldHref = document.location.href;
+      main();
+    }
+  });
+
+  observer.observe(body, { childList: true, subtree: true });
+}
+
+window.addEventListener("load", () => observeUrlChange());
 
 async function main() {
   const chatContainer = document.querySelector<HTMLDivElement>(".css-175oi2r")!;
-
-  // if (chatContainer) {
-  //   clearInterval(interval);
-  // }
 
   const useChannelSubscriptionPolling_SubscriptionQuery = `
     query useChannelSubscriptionPolling_SubscriptionQuery(
@@ -85,5 +96,3 @@ async function main() {
 
   observer.observe(chatContainer, { childList: true, subtree: true });
 }
-
-main();
