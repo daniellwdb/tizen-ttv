@@ -1,5 +1,6 @@
 {
   "name": "tizen-ttv",
+  "version": "0.0.1",
   "private": true,
   "description": "Twitch app for TizenBrew with support for emotes.",
   "main": "./dist/index.js",
