@@ -3,6 +3,7 @@ import { parseEmotes } from "emotettv";
 const TWITCH_CLIENT_ID = "ue6666qo983tsx6so1t0vnawi233wa";
 const TWITCH_API = "https://gql.twitch.tv/gql";
 
+// @ts-expect-error
 async function getChannelId() {
   const useChannelSubscriptionPolling_SubscriptionQuery = `
   query useChannelSubscriptionPolling_SubscriptionQuery(
@@ -67,7 +68,8 @@ async function main() {
             originalMessage.textContent!,
             undefined,
             {
-              channelId: await getChannelId(),
+              // TODO: Dynamically get channel id
+              channelId: "92038375",
               providers: {
                 twitch: true,
                 bttv: true,
